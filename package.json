@@ -15,7 +15,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@types/uuid": "^9.0.8",
+    "axios": "^1.6.7",
+    "classnames": "^2.5.1",
     "pinia": "^2.1.7",
+    "uuid": "^9.0.1",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },

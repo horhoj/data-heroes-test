@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 14px;
 }
 
 * {
@@ -22,4 +23,13 @@
     border-radius: 20px;
     border: 1px solid #ddd;
   }
+}
+
+body {
+  background-color: #272b33;
+}
+
+.global-container {
+  max-width: 1440px;
+  margin: 0 auto;
 }
