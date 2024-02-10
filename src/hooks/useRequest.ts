@@ -1,10 +1,16 @@
+import { AxiosError } from 'axios'
 import { ref } from 'vue'
 import type { Ref } from 'vue'
+
+export interface RequestError {
+  code: number | null
+  message: string
+}
 
 export const useRequest = <T>(request: () => Promise<T>, isClearDataOnNewRequest = false) => {
   const response = ref(null) as Ref<T | null>
   const isLoading = ref<boolean>(false)
-  const requestError = ref<unknown | null>(null)
+  const requestError = ref<RequestError | null>(null)
 
   const load = async (): Promise<void> => {
     try {
@@ -20,10 +26,10 @@ export const useRequest = <T>(request: () => Promise<T>, isClearDataOnNewRequest
         response.value = currentResponse
       }
     } catch (e) {
-      if (e instanceof Error) {
-        requestError.value = e.message
+      if (e instanceof AxiosError) {
+        requestError.value = { code: e.response?.status ?? null, message: e.message }
       } else {
-        requestError.value = 'unknown error'
+        requestError.value = { code: null, message: 'unknown error' }
       }
       response.value = null
     } finally {

@@ -1,5 +1,12 @@
 <script setup lang="ts">
-const props = defineProps<{ page: number; lastPage: number; onPaginate: (page: number) => void }>()
+import classNames from 'classnames'
+
+const props = defineProps<{
+  page: number
+  lastPage: number
+  onPaginate: (page: number) => void
+  isLoading: boolean
+}>()
 
 const handleFirst = () => {
   if (props.page !== 1) {
@@ -29,12 +36,12 @@ const handleNext = () => {
 </script>
 
 <template>
-  <div class="paginator">
-    <button class="button" @click="handleFirst">{{ '<<' }}</button>
-    <button class="button" @click="handlePrev">{{ '<' }}</button>
+  <div :class="classNames('paginator', props.isLoading && 'is-loading')">
+    <button class="button" @click="handleFirst" :disabled="props.isLoading">{{ '<<' }}</button>
+    <button class="button" @click="handlePrev" :disabled="props.isLoading">{{ '<' }}</button>
     <span class="page">{{ props.page }} - {{ props.lastPage }}</span>
-    <button class="button" @click="handleNext">{{ '>' }}</button>
-    <button class="button" @click="handleLast">{{ '>>' }}</button>
+    <button class="button" @click="handleNext" :disabled="props.isLoading">{{ '>' }}</button>
+    <button class="button" @click="handleLast" :disabled="props.isLoading">{{ '>>' }}</button>
   </div>
 </template>
 
@@ -45,6 +52,7 @@ const handleNext = () => {
   gap: 10px;
   padding: 10px;
   align-items: center;
+  transition: all 300ms;
 }
 
 .button {
@@ -69,5 +77,9 @@ const handleNext = () => {
   border-radius: 10px;
   background-color: darkslateblue;
   color: #fff;
+}
+
+.is-loading {
+  opacity: 0.5;
 }
 </style>

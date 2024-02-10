@@ -8,8 +8,10 @@ import Paginator from '@/components/Paginator.vue'
 import CharacterListCard from '@/components/CharacterListCard.vue'
 import debounce from 'lodash/debounce'
 import { Status } from '@/api/charactersListResponseItem.types'
+import Spinner from '@/components/Spinner.vue'
+import RequestError from '@/components/RequestError.vue'
 
-const DEBOUNCE_TIMEOUT = 500
+const DEBOUNCE_TIMEOUT = 600
 const STATUS_NOT_CHOSEN_VALUE = ''
 
 const { searchParams, setSearchParams } = useSearchParams()
@@ -58,11 +60,17 @@ const handleResetFilters = () => {
 </script>
 
 <template>
+  <Spinner :is-show="fetchCharactersRequest.isLoading.value" />
   <div class="global-container">
     <div class="filters-wrap">
       <div class="filter-field">
         <label class="filter-label">Character name</label>
-        <input @input="handleSearchChange" :value="name" class="filter" />
+        <input
+          @input="handleSearchChange"
+          :value="name"
+          class="filter filter-input"
+          :readonly="fetchCharactersRequest.isLoading.value"
+        />
       </div>
       <div class="filter-field">
         <label class="filter-label">Character status</label>
@@ -71,6 +79,7 @@ const handleResetFilters = () => {
           @change="handleStatusSelect"
           :value="status"
           placeholder="...input name"
+          :disabled="fetchCharactersRequest.isLoading.value"
         >
           <option>{{ STATUS_NOT_CHOSEN_VALUE }}</option>
           <option>{{ Status.Alive.toLowerCase() }}</option>
@@ -79,7 +88,13 @@ const handleResetFilters = () => {
         </select>
       </div>
       <div>
-        <button class="filter-reset-btn" @click="handleResetFilters">reset</button>
+        <button
+          class="filter-reset-btn"
+          @click="handleResetFilters"
+          :disabled="fetchCharactersRequest.isLoading.value"
+        >
+          reset
+        </button>
       </div>
     </div>
     <template v-if="fetchCharactersRequest.response.value">
@@ -87,6 +102,7 @@ const handleResetFilters = () => {
         :page="page"
         :last-page="fetchCharactersRequest.response.value.info.pages"
         :on-paginate="handlePaginate"
+        :is-loading="fetchCharactersRequest.isLoading.value"
       />
       <ul class="character-list">
         <CharacterListCard
@@ -104,8 +120,13 @@ const handleResetFilters = () => {
         :page="page"
         :last-page="fetchCharactersRequest.response.value.info.pages"
         :on-paginate="handlePaginate"
+        :is-loading="fetchCharactersRequest.isLoading.value"
       />
     </template>
+    <RequestError
+      v-if="fetchCharactersRequest.requestError.value"
+      :error="fetchCharactersRequest.requestError.value"
+    />
   </div>
 </template>
 
@@ -148,6 +169,11 @@ const handleResetFilters = () => {
   min-height: 40px;
   font-size: 18px;
   border-radius: 10px;
+  transition: all 300ms;
+}
+
+.filter-input:read-only {
+  opacity: 0.5;
 }
 
 .filter option {
@@ -163,6 +189,10 @@ const handleResetFilters = () => {
   color: #fff;
   border-radius: 10px;
   cursor: pointer;
+  transition: all 300ms;
+}
+
+.filter-reset-btn:disabled {
+  opacity: 0.5;
 }
 </style>
-@/api/charactersListResponseItem.types

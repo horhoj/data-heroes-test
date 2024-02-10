@@ -5,6 +5,7 @@ import { useRequest } from '@/hooks/useRequest'
 import { useSearchParams } from '@/hooks/useSearchParams'
 import { computed, watch } from 'vue'
 import { RouterLink } from 'vue-router'
+import RequestError from '@/components/RequestError.vue'
 
 const { searchParams } = useSearchParams()
 
@@ -30,6 +31,10 @@ watch(searchParams, () => {
         >back</RouterLink
       >
     </div>
+    <RequestError
+      v-if="fetchCharacterRequest.requestError.value"
+      :error="fetchCharacterRequest.requestError.value"
+    />
     <div v-if="fetchCharacterRequest.response.value" class="data-wrap">
       <img :src="fetchCharacterRequest.response.value.image" alt="character img" class="img" />
       <div class="data-item">
@@ -96,7 +101,6 @@ watch(searchParams, () => {
   height: 300px !important;
   width: 100%;
   height: 100%;
-  background-color: red;
   object-fit: cover;
   border-radius: 10px;
   margin: auto;
