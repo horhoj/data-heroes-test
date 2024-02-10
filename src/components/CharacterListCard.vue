@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { Status, type CharacterListResponseItem, Gender } from '@/api/characters.types'
+import {
+  Status,
+  type CharacterListResponseItem,
+  Gender
+} from '@/api/charactersListResponseItem.types'
 import { computed } from 'vue'
 import classNames from 'classnames'
+import { RouterLink, type RouteLocationRaw } from 'vue-router'
 
-const props = defineProps<{ character: CharacterListResponseItem }>()
+const props = defineProps<{ character: CharacterListResponseItem; link: RouteLocationRaw }>()
 
 const statusClasses = computed(() =>
   classNames(
@@ -25,7 +30,7 @@ const gender = computed(() =>
     </div>
     <div class="info-wrap">
       <div class="info-field">
-        <div class="character-name">{{ character.name }}</div>
+        <RouterLink class="character-name" :to="props.link">{{ character.name }}</RouterLink>
         <div>
           <span :class="statusClasses" /> {{ character.status }} - {{ character.species }}
           <span v-if="gender !== null">- {{ gender }}</span>
@@ -36,8 +41,8 @@ const gender = computed(() =>
         <div>{{ character.location.name }}</div>
       </div>
       <div class="info-field">
-        <div class="info-helper">First seen in:</div>
-        <div>{{ character.origin.name }}</div>
+        <div class="info-helper">created:</div>
+        <div>{{ new Date(character.created).toLocaleString() }}</div>
       </div>
     </div>
   </li>
@@ -89,6 +94,12 @@ const gender = computed(() =>
 .character-name {
   font-weight: 700;
   font-size: 26px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.character-name:hover {
+  color: orange;
 }
 
 .status {

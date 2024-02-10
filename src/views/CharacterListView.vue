@@ -7,7 +7,7 @@ import { charactersApi } from '@/api/characters'
 import Paginator from '@/components/Paginator.vue'
 import CharacterListCard from '@/components/CharacterListCard.vue'
 import debounce from 'lodash/debounce'
-import { Status } from '@/api/characters.types'
+import { Status } from '@/api/charactersListResponseItem.types'
 
 const DEBOUNCE_TIMEOUT = 500
 const STATUS_NOT_CHOSEN_VALUE = ''
@@ -18,9 +18,8 @@ const page = computed(() => getNumberQueryParam(searchParams.value, 'page', 1))
 const name = computed(() => getStringQueryParam(searchParams.value, 'name', ''))
 const status = computed(() => getStringQueryParam(searchParams.value, 'status', ''))
 
-const fetchCharactersRequest = useRequest(
-  () => charactersApi.fetchCharacterList(page.value, name.value, status.value),
-  false
+const fetchCharactersRequest = useRequest(() =>
+  charactersApi.fetchCharacterList(page.value, name.value, status.value)
 )
 
 watch(searchParams, () => {
@@ -83,7 +82,7 @@ const handleResetFilters = () => {
         <button class="filter-reset-btn" @click="handleResetFilters">reset</button>
       </div>
     </div>
-    <div v-if="fetchCharactersRequest.response.value">
+    <template v-if="fetchCharactersRequest.response.value">
       <Paginator
         :page="page"
         :last-page="fetchCharactersRequest.response.value.info.pages"
@@ -94,6 +93,11 @@ const handleResetFilters = () => {
           v-for="character in fetchCharactersRequest.response.value.results"
           :character="character"
           :key="character.id"
+          :link="{
+            name: 'character',
+
+            query: { ...searchParams, id: character.id.toString() }
+          }"
         />
       </ul>
       <Paginator
@@ -101,7 +105,7 @@ const handleResetFilters = () => {
         :last-page="fetchCharactersRequest.response.value.info.pages"
         :on-paginate="handlePaginate"
       />
-    </div>
+    </template>
   </div>
 </template>
 
@@ -161,3 +165,4 @@ const handleResetFilters = () => {
   cursor: pointer;
 }
 </style>
+@/api/charactersListResponseItem.types

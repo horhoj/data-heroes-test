@@ -7,9 +7,9 @@ const routes = [
     component: () => import('../views/CharacterListView.vue')
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import('../views/AboutView.vue')
+    path: '/character',
+    name: 'character',
+    component: () => import('../views/CharacterView.vue')
   },
   {
     path: '/:pathMatch(.*)*',

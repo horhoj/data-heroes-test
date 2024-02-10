@@ -5,9 +5,12 @@
 <style scoped>
 .footer {
   min-height: 100px;
-  color: #fff;
+  color: rgb(150, 150, 150);
   justify-content: center;
   align-items: center;
   display: flex;
+  padding: 15px;
+  font-size: 14px;
+
 }
 </style>
