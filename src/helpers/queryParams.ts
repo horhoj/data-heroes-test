@@ -17,3 +17,16 @@ export const getNumberQueryParam = (
 
   return defaultValue
 }
+
+export const getStringQueryParam = (
+  searchParams: LocationQuery,
+  paramName: string,
+  defaultValue: string
+) => {
+  const param = searchParams[paramName] ?? ''
+  if (Array.isArray(param)) {
+    return defaultValue
+  }
+
+  return param
+}

@@ -47,7 +47,7 @@ const gender = computed(() =>
 .card {
   display: flex;
   width: 600px;
-  min-height: 225px;
+  min-height: 240px;
   background-color: #3c3e44;
   border-radius: 10px;
   overflow: hidden;

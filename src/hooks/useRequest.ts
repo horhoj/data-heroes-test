@@ -25,6 +25,7 @@ export const useRequest = <T>(request: () => Promise<T>, isClearDataOnNewRequest
       } else {
         requestError.value = 'unknown error'
       }
+      response.value = null
     } finally {
       isLoading.value = false
     }

@@ -1,17 +1,27 @@
 <script setup lang="ts">
-import { getNumberQueryParam } from '@/helpers/queryParams'
+import { getNumberQueryParam, getStringQueryParam } from '@/helpers/queryParams'
 import { useRequest } from '@/hooks/useRequest'
 import { useSearchParams } from '@/hooks/useSearchParams'
 import { computed, watch } from 'vue'
 import { charactersApi } from '@/api/characters'
 import Paginator from '@/components/Paginator.vue'
 import CharacterListCard from '@/components/CharacterListCard.vue'
+import debounce from 'lodash/debounce'
+import { Status } from '@/api/characters.types'
+
+const DEBOUNCE_TIMEOUT = 500
+const STATUS_NOT_CHOSEN_VALUE = ''
 
 const { searchParams, setSearchParams } = useSearchParams()
 
 const page = computed(() => getNumberQueryParam(searchParams.value, 'page', 1))
+const name = computed(() => getStringQueryParam(searchParams.value, 'name', ''))
+const status = computed(() => getStringQueryParam(searchParams.value, 'status', ''))
 
-const fetchCharactersRequest = useRequest(() => charactersApi.fetchCharacterList(page.value))
+const fetchCharactersRequest = useRequest(
+  () => charactersApi.fetchCharacterList(page.value, name.value, status.value),
+  false
+)
 
 watch(searchParams, () => {
   fetchCharactersRequest.load()
@@ -23,10 +33,44 @@ const handlePaginate = (page: number) => {
     page: page.toString()
   })
 }
+
+const handleSearchChange = debounce((e: Event) => {
+  const value = (e.target as HTMLInputElement).value
+  setSearchParams({
+    ...searchParams.value,
+    name: value,
+    page: '1'
+  })
+}, DEBOUNCE_TIMEOUT)
+
+const handleStatusSelect = (e: Event) => {
+  const value = (e.target as HTMLSelectElement).value
+
+  setSearchParams({
+    ...searchParams.value,
+    status: value,
+    page: '1'
+  })
+}
 </script>
 
 <template>
   <div class="global-container">
+    <div class="filters-wrap">
+      <div class="filter-field">
+        <label class="filter-label">name</label>
+        <input @input="handleSearchChange" :value="name" class="filter" />
+      </div>
+      <div class="filter-field">
+        <label class="filter-label">name</label>
+        <select class="filter" @change="handleStatusSelect" :value="status">
+          <option>{{ STATUS_NOT_CHOSEN_VALUE }}</option>
+          <option>{{ Status.Alive.toLowerCase() }}</option>
+          <option>{{ Status.Dead.toLowerCase() }}</option>
+          <option>{{ Status.Unknown.toLowerCase() }}</option>
+        </select>
+      </div>
+    </div>
     <div v-if="fetchCharactersRequest.response.value">
       <Paginator
         :page="page"
@@ -46,8 +90,6 @@ const handlePaginate = (page: number) => {
         :on-paginate="handlePaginate"
       />
     </div>
-
-    <!-- <pre>{{ JSON.stringify(fetchCharactersRequest.response.value, null, 2) }}</pre> -->
   </div>
 </template>
 
@@ -59,5 +101,40 @@ const handlePaginate = (page: number) => {
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
+}
+
+.filters-wrap {
+  display: flex;
+  padding: 15px;
+  gap: 15px;
+  @media screen and (max-width: 700px) {
+    flex-direction: column;
+  }
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+.filter-label {
+  color: #fff;
+}
+
+.filter {
+  background-color: #3c3e44;
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  width: 100%;
+  min-height: 40px;
+  font-size: 18px;
+  border-radius: 10px;
+}
+
+.filter option {
+  background-color: #222;
+  font-size: 18px;
 }
 </style>

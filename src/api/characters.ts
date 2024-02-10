@@ -4,10 +4,10 @@ import axios from 'axios'
 
 const axiosInstance = axios.create({ baseURL: BASE_URL, headers: API_DEFAULT_REQUEST_HEADERS })
 
-const fetchCharacterList = async (page: number) => {
+const fetchCharacterList = async (page: number, name: string, status: string) => {
   const res = await axiosInstance.request<CharacterListResponse>({
     url: '/character',
-    params: { page }
+    params: { page, name, status }
   })
 
   return res.data
