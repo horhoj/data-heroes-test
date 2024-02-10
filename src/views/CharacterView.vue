@@ -6,6 +6,7 @@ import { useSearchParams } from '@/hooks/useSearchParams'
 import { computed, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import RequestError from '@/components/RequestError.vue'
+import Spinner from '@/components/Spinner.vue'
 
 const { searchParams } = useSearchParams()
 
@@ -25,6 +26,7 @@ watch(searchParams, () => {
 </script>
 
 <template>
+  <Spinner :is-show="fetchCharacterRequest.isLoading.value" />
   <div class="global-container">
     <div class="nav-wrap">
       <RouterLink :to="{ name: 'characters', query: characterListSearchParams }" class="back-link"

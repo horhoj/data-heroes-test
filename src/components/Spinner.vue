@@ -17,7 +17,7 @@ const props = defineProps<{ isShow: boolean }>()
   top: 0;
   left: 0;
   animation: progressBar 0.8s linear 0s infinite;
-  background: lightgray
+  background: darkslateblue
     linear-gradient(
       315deg,
       transparent,

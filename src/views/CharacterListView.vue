@@ -10,6 +10,7 @@ import debounce from 'lodash/debounce'
 import { Status } from '@/api/charactersListResponseItem.types'
 import Spinner from '@/components/Spinner.vue'
 import RequestError from '@/components/RequestError.vue'
+import classNames from 'classnames'
 
 const DEBOUNCE_TIMEOUT = 600
 const STATUS_NOT_CHOSEN_VALUE = ''
@@ -104,14 +105,20 @@ const handleResetFilters = () => {
         :on-paginate="handlePaginate"
         :is-loading="fetchCharactersRequest.isLoading.value"
       />
-      <ul class="character-list">
+      <ul
+        :class="
+          classNames(
+            'character-list',
+            fetchCharactersRequest.isLoading.value && 'character-list-is-loading'
+          )
+        "
+      >
         <CharacterListCard
           v-for="character in fetchCharactersRequest.response.value.results"
           :character="character"
           :key="character.id"
           :link="{
             name: 'character',
-
             query: { ...searchParams, id: character.id.toString() }
           }"
         />
@@ -138,6 +145,11 @@ const handleResetFilters = () => {
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
+  transition: opacity 300ms;
+}
+
+.character-list-is-loading {
+  opacity: 0.5;
 }
 
 .filters-wrap {
@@ -169,7 +181,7 @@ const handleResetFilters = () => {
   min-height: 40px;
   font-size: 18px;
   border-radius: 10px;
-  transition: all 300ms;
+  transition: opacity 300ms;
 }
 
 .filter-input:read-only {
@@ -189,7 +201,7 @@ const handleResetFilters = () => {
   color: #fff;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 300ms;
+  transition: opacity 300ms;
 }
 
 .filter-reset-btn:disabled {

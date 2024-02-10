@@ -7,6 +7,7 @@ import axios from 'axios'
 const axiosInstance = axios.create({ baseURL: BASE_URL, headers: API_DEFAULT_REQUEST_HEADERS })
 
 const fetchCharacterList = async (page: number, name: string, status: string) => {
+  //задержка в чисто декоративных целях
   await delay(500)
 
   const res = await axiosInstance.request<CharacterListResponse>({
@@ -18,6 +19,8 @@ const fetchCharacterList = async (page: number, name: string, status: string) =>
 }
 
 const fetchCharacter = async (id: number) => {
+  //задержка в чисто декоративных целях
+  await delay(500)
   const res = await axiosInstance.request<characterResponseItem>({
     url: `character/${id}`
   })
