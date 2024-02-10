@@ -2,9 +2,9 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import('../views/HomeView.vue')
+    path: '/characters',
+    name: 'characters',
+    component: () => import('../views/CharacterListView.vue')
   },
   {
     path: '/about',
@@ -13,7 +13,7 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/'
+    redirect: '/characters'
   }
 ] as const satisfies readonly RouteRecordRaw[]
 

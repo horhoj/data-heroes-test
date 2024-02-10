@@ -52,23 +52,35 @@ const handleStatusSelect = (e: Event) => {
     page: '1'
   })
 }
+
+const handleResetFilters = () => {
+  setSearchParams({})
+}
 </script>
 
 <template>
   <div class="global-container">
     <div class="filters-wrap">
       <div class="filter-field">
-        <label class="filter-label">name</label>
+        <label class="filter-label">Character name</label>
         <input @input="handleSearchChange" :value="name" class="filter" />
       </div>
       <div class="filter-field">
-        <label class="filter-label">name</label>
-        <select class="filter" @change="handleStatusSelect" :value="status">
+        <label class="filter-label">Character status</label>
+        <select
+          class="filter"
+          @change="handleStatusSelect"
+          :value="status"
+          placeholder="...input name"
+        >
           <option>{{ STATUS_NOT_CHOSEN_VALUE }}</option>
           <option>{{ Status.Alive.toLowerCase() }}</option>
           <option>{{ Status.Dead.toLowerCase() }}</option>
           <option>{{ Status.Unknown.toLowerCase() }}</option>
         </select>
+      </div>
+      <div>
+        <button class="filter-reset-btn" @click="handleResetFilters">reset</button>
       </div>
     </div>
     <div v-if="fetchCharactersRequest.response.value">
@@ -107,6 +119,7 @@ const handleStatusSelect = (e: Event) => {
   display: flex;
   padding: 15px;
   gap: 15px;
+  align-items: flex-end;
   @media screen and (max-width: 700px) {
     flex-direction: column;
   }
@@ -136,5 +149,15 @@ const handleStatusSelect = (e: Event) => {
 .filter option {
   background-color: #222;
   font-size: 18px;
+}
+
+.filter-reset-btn {
+  min-height: 40px;
+  min-width: 150px;
+  background-color: darkslateblue;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>

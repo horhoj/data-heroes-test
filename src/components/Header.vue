@@ -1,33 +1,25 @@
-<script setup lang="ts">
-import { RouterLink } from 'vue-router'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <header class="header">
-    <nav class="nav">
-      <RouterLink class="router-link" active-class="router-link-active" :to="{ name: 'home' }"
-        >Home</RouterLink
-      >
-      <RouterLink class="router-link" active-class="router-link-active" :to="{ name: 'about' }"
-        >About</RouterLink
-      >
-    </nav>
+    <div class="global-container">
+      <div class="logo">RICK & MORTY</div>
+    </div>
   </header>
 </template>
 
 <style scoped>
-.nav {
-  padding: 10px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+.header {
+  background-color: #242525;
+  padding: 15px;
 }
+.logo {
+  color: #fff;
+  font-size: 80px;
+  font-weight: 500;
 
-.router-link {
-  text-decoration: none;
-}
-
-.router-link-active {
-  color: red;
+  @media screen and (max-width: 700px) {
+    font-size: 40px;
+  }
 }
 </style>
