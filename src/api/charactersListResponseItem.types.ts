@@ -46,4 +46,3 @@ export enum Status {
   Dead = 'Dead',
   Unknown = 'unknown'
 }
-

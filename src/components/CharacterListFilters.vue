@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { Status } from '@/api/charactersListResponseItem.types'
 import type { LocationQuery } from 'vue-router'
-import debounce from 'lodash/debounce'
+import { computed, ref, watch } from 'vue'
 
 const STATUS_NOT_CHOSEN_VALUE = ''
-const DEBOUNCE_TIMEOUT = 600
 
 const props = defineProps<{
   searchParams: LocationQuery
@@ -14,28 +13,40 @@ const props = defineProps<{
   isLoading: boolean
 }>()
 
-const handleSearchChange = debounce((e: Event) => {
+const fName = ref('')
+const fStatus = ref(STATUS_NOT_CHOSEN_VALUE)
+
+watch(props, () => {
+  fName.value = props.name
+  fStatus.value = props.status
+})
+
+const handleSearchChange = (e: Event) => {
   const value = (e.target as HTMLInputElement).value
-  props.setSearchParams({
-    ...props.searchParams,
-    name: value,
-    page: '1'
-  })
-}, DEBOUNCE_TIMEOUT)
+  fName.value = value
+}
 
 const handleStatusSelect = (e: Event) => {
   const value = (e.target as HTMLSelectElement).value
-
-  props.setSearchParams({
-    ...props.searchParams,
-    status: value,
-    page: '1'
-  })
+  fStatus.value = value
 }
 
 const handleResetFilters = () => {
   props.setSearchParams({})
 }
+
+const handleSubmitFilters = () => {
+  props.setSearchParams({
+    ...props.searchParams,
+    name: fName.value,
+    status: fStatus.value,
+    page: '1'
+  })
+}
+
+const isSubmitDisabled = computed(
+  () => props.isLoading || (fName.value === props.name && fStatus.value === props.status)
+)
 </script>
 
 <template>
@@ -44,7 +55,7 @@ const handleResetFilters = () => {
       <label class="filter-label">Character name</label>
       <input
         @input="handleSearchChange"
-        :value="name"
+        :value="fName"
         class="filter filter-input"
         :readonly="isLoading"
       />
@@ -54,7 +65,7 @@ const handleResetFilters = () => {
       <select
         class="filter"
         @change="handleStatusSelect"
-        :value="status"
+        :value="fStatus"
         placeholder="...input name"
         :disabled="isLoading"
       >
@@ -64,10 +75,11 @@ const handleResetFilters = () => {
         <option>{{ Status.Unknown.toLowerCase() }}</option>
       </select>
     </div>
-    <div>
-      <button class="filter-reset-btn" @click="handleResetFilters" :disabled="isLoading">
-        reset
+    <div class="filter-btns-wrap">
+      <button class="filter-btn" @click="handleSubmitFilters" :disabled="isSubmitDisabled">
+        submit
       </button>
+      <button class="filter-btn" @click="handleResetFilters" :disabled="isLoading">reset</button>
     </div>
   </div>
 </template>
@@ -116,7 +128,7 @@ const handleResetFilters = () => {
   font-size: 18px;
 }
 
-.filter-reset-btn {
+.filter-btn {
   min-height: 40px;
   min-width: 150px;
   background-color: darkslateblue;
@@ -127,7 +139,12 @@ const handleResetFilters = () => {
   transition: opacity 300ms;
 }
 
-.filter-reset-btn:disabled {
+.filter-btn:disabled {
   opacity: 0.5;
+}
+
+.filter-btns-wrap {
+  display: flex;
+  gap: 15px;
 }
 </style>

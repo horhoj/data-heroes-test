@@ -33,11 +33,8 @@ prod:
 install:
 	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "npm i"
 
-lint-check:
-	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "npm run lint-check"
-
-lint-fix:
-	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "npm run lint-fix"
+lint:
+	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "npm run lint"
 
 type-check:
 	docker-compose exec --user $(shell id -u):$(shell id -g)  node sh -c "npm run type-check"
