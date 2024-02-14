@@ -4,33 +4,34 @@ import classNames from 'classnames'
 const props = defineProps<{
   page: number
   lastPage: number
-  onPaginate: (page: number) => void
   isLoading: boolean
 }>()
 
+const emit = defineEmits<{ (e: 'on-paginate', page: number): void }>()
+
 const handleFirst = () => {
   if (props.page !== 1) {
-    props.onPaginate(1)
+    emit('on-paginate', 1)
   }
 }
 
 const handleLast = () => {
   if (props.page !== props.lastPage) {
-    props.onPaginate(props.lastPage)
+    emit('on-paginate', props.lastPage)
   }
 }
 
 const handlePrev = () => {
   const prevPage = props.page - 1
   if (prevPage >= 1) {
-    props.onPaginate(prevPage)
+    emit('on-paginate', prevPage)
   }
 }
 
 const handleNext = () => {
   const nextPage = props.page + 1
   if (nextPage <= props.lastPage) {
-    props.onPaginate(nextPage)
+    emit('on-paginate', nextPage)
   }
 }
 </script>

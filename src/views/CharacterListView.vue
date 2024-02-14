@@ -55,8 +55,8 @@ const handleFilterReset = () => {
       <Paginator
         :page="page"
         :last-page="fetchCharactersRequest.response.value.info.pages"
-        :on-paginate="handlePaginate"
         :is-loading="fetchCharactersRequest.isLoading.value"
+        @on-paginate="handlePaginate"
       />
       <ul
         :class="
@@ -79,8 +79,8 @@ const handleFilterReset = () => {
       <Paginator
         :page="page"
         :last-page="fetchCharactersRequest.response.value.info.pages"
-        :on-paginate="handlePaginate"
         :is-loading="fetchCharactersRequest.isLoading.value"
+        @on-paginate="handlePaginate"
       />
     </template>
     <RequestError
