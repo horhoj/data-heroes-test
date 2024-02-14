@@ -32,6 +32,13 @@ const handlePaginate = (page: number) => {
     page: page.toString()
   })
 }
+
+const handleFilter = (name: string, status: string) => {
+  setSearchParams({ ...searchParams.value, name, status, page: '1' })
+}
+const handleFilterReset = () => {
+  setSearchParams({})
+}
 </script>
 
 <template>
@@ -41,8 +48,8 @@ const handlePaginate = (page: number) => {
       :is-loading="fetchCharactersRequest.isLoading.value"
       :name="name"
       :status="status"
-      :set-search-params="setSearchParams"
-      :search-params="searchParams"
+      @on-filter="handleFilter"
+      @on-filter-reset="handleFilterReset"
     />
     <template v-if="fetchCharactersRequest.response.value">
       <Paginator

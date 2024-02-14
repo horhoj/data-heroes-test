@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { Status } from '@/api/charactersListResponseItem.types'
-import type { LocationQuery } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 
 const STATUS_NOT_CHOSEN_VALUE = ''
 
 const props = defineProps<{
-  searchParams: LocationQuery
-  setSearchParams: (value: LocationQuery) => void
   name: string
   status: string
   isLoading: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'on-filter', name: string, status: string): void
+  (e: 'on-filter-reset'): void
 }>()
 
 const fName = ref('')
@@ -32,16 +34,11 @@ const handleStatusSelect = (e: Event) => {
 }
 
 const handleResetFilters = () => {
-  props.setSearchParams({})
+  emit('on-filter-reset')
 }
 
 const handleSubmitFilters = () => {
-  props.setSearchParams({
-    ...props.searchParams,
-    name: fName.value,
-    status: fStatus.value,
-    page: '1'
-  })
+  emit('on-filter', fName.value, fStatus.value)
 }
 
 const isSubmitDisabled = computed(
