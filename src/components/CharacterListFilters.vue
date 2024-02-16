@@ -23,16 +23,6 @@ watch(props, () => {
   fStatus.value = props.status
 })
 
-const handleSearchChange = (e: Event) => {
-  const value = (e.target as HTMLInputElement).value
-  fName.value = value
-}
-
-const handleStatusSelect = (e: Event) => {
-  const value = (e.target as HTMLSelectElement).value
-  fStatus.value = value
-}
-
 const handleResetFilters = () => {
   emit('on-filter-reset')
 }
@@ -50,22 +40,11 @@ const isSubmitDisabled = computed(
   <div class="filters-wrap">
     <div class="filter-field">
       <label class="filter-label">Character name</label>
-      <input
-        @input="handleSearchChange"
-        :value="fName"
-        class="filter filter-input"
-        :readonly="isLoading"
-      />
+      <input v-model.trim="fName" class="filter filter-input" :readonly="isLoading" />
     </div>
     <div class="filter-field">
       <label class="filter-label">Character status</label>
-      <select
-        class="filter"
-        @change="handleStatusSelect"
-        :value="fStatus"
-        placeholder="...input name"
-        :disabled="isLoading"
-      >
+      <select class="filter" :disabled="isLoading" v-model="fStatus">
         <option>{{ STATUS_NOT_CHOSEN_VALUE }}</option>
         <option>{{ Status.Alive.toLowerCase() }}</option>
         <option>{{ Status.Dead.toLowerCase() }}</option>
